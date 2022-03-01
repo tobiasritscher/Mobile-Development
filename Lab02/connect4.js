@@ -4,6 +4,7 @@
   var rows, cols;
   var nextColor = 0;
 
+
   const initBoard = (numRows, numCols) => {
     for (let i=0; i<numRows; i+=1) {
       colorA[i] = 0;
