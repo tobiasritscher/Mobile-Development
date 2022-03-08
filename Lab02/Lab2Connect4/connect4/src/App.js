@@ -39,11 +39,12 @@ class Board extends React.Component {
         super(props);
         this.state = {
             squares: Array(rowAmount).fill(null).map(row => new Array(colAmount).fill(null)),
-            nextTurn: 1
+            nextTurn: 1,
+            winner: null
         };
     }
 
-    handleClick(j) {
+    handleClick(i, j) {
         const squares = this.state.squares.slice();
         var lowest = this.dropPiece(j);
 
@@ -53,15 +54,20 @@ class Board extends React.Component {
         else{
             squares[lowest][j] = 'red';
         }
-        this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1});
+        //this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1, });
+        this.setState({squares: squares,
+            nextTurn: this.state.nextTurn %2 + 1,
+            winner: this.checkWinner(i, j, this.state.squares[i][j])
+        })
     }
 
     renderSquare(i,j) {
         return (
             <Square
                 value={this.state.squares[i][j]}
-                onClick={() => this.handleClick(j)}
+                onClick={() => this.handleClick(i, j)}
             />
+
         );
     }
 
@@ -73,14 +79,131 @@ class Board extends React.Component {
     }
 
     resetBoard(){
-        this.state = {
+        this.setState({
             squares: Array(rowAmount).fill(null).map(row => new Array(colAmount).fill(null)),
-            nextTurn: 1
-        };
+            nextTurn: 1,
+            winner: null
+        })
+    }
+
+    checkWinner(i, j, player){
+        const squares = this.state.squares.slice()
+        var positionI = i
+        var positionJ = j
+        var counter = 0
+
+        if(checkHorizontal(i, j, player) || checkDiagonalLeft(i, j, player) || checkDiagonalRIght(i, j, player) || checkVertical(i, j, player)){
+            return player
+        }
+        return ' '
+
+        function checkHorizontal(i, j, player) {
+            counter = 0
+            while(squares[i][j] === player){
+                i++
+                counter++
+                if(i > rowAmount-1){
+                    break
+                }
+            }
+            i = positionI -1
+
+            while(squares[i][j] === player){
+                i--
+                counter++
+                if(i < 0){
+                    break
+                }
+            }
+
+            if(counter >= 4){
+                return true
+            }
+            return false
+        }
+        function checkDiagonalLeft(i, j, player) {
+            counter = 0
+            while(squares[i][j] === player){
+                i--
+                j--
+                counter++
+                if(i < 0 || j < 0){
+                    break
+                }
+            }
+            i = positionI -1
+            j = positionJ -1
+
+            while(squares[i][j] === player){
+                i++
+                j++
+                counter++
+                if(i > rowAmount-1 || j > colAmount-1){
+                    break
+                }
+            }
+
+            if(counter >= 4){
+                return true
+            }
+            return false
+        }
+        function checkDiagonalRIght(i, j, player) {
+            counter = 0
+            while(squares[i][j] === player){
+                i--
+                j++
+                counter++
+                if(i < 0 ||  j > colAmount-1){
+                    break
+                }
+            }
+            i = positionI -1
+            j = positionJ -1
+
+            while(squares[i][j] === player){
+                i++
+                j--
+                counter++
+                if(i > rowAmount-1 || j < 0){
+                    break
+                }
+            }
+
+            if(counter >= 4){
+                return true
+            }
+            return false
+        }
+        function checkVertical(i, j, player) {
+            counter = 0
+            while(squares[i][j] === player){
+                j++
+                counter++
+                if(j > colAmount-1){
+                    break
+                }
+            }
+            j = positionJ -1
+
+            while(squares[i][j] === player){
+                j--
+                counter++
+                if(j < 0){
+                    break
+                }
+            }
+
+            if(counter >= 4){
+                return true
+            }
+            return false
+        }
     }
 
     render() {
-        const status = 'Next player: ' + this.state.nextTurn;
+        const status = 'Next player: ' + this.state.nextTurn
+        const winner = 'Winner is: ' + this.state.winner
 
         return (
             <div>
@@ -94,8 +217,9 @@ class Board extends React.Component {
                         </div>
                     ))}
                 </div>
+                <div className="status">{winner}</div>
                 <div>
-                    <button onClick={() => this.handleClick(this.resetBoard())}>
+                    <button onClick={() => this.resetBoard()}>
                         Reset Game
                     </button>
                 </div>
