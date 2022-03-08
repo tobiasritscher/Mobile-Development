@@ -47,7 +47,7 @@ class Board extends React.Component {
         const squares = this.state.squares.slice();
         var lowest = this.dropPiece(j);
 
-        if(this.state.nextTurn == 1){
+        if(this.state.nextTurn === 1){
             squares[lowest][j] = 'blue';
         }
         else{
@@ -72,6 +72,13 @@ class Board extends React.Component {
         }
     }
 
+    resetBoard(){
+        this.state = {
+            squares: Array(rowAmount).fill(null).map(row => new Array(colAmount).fill(null)),
+            nextTurn: 1
+        };
+    }
+
     render() {
         const status = 'Next player: ' + this.state.nextTurn;
 
@@ -86,6 +93,11 @@ class Board extends React.Component {
                             ))}
                         </div>
                     ))}
+                </div>
+                <div>
+                    <button onClick={() => this.handleClick(this.resetBoard())}>
+                        Reset Game
+                    </button>
                 </div>
             </div>
         );
