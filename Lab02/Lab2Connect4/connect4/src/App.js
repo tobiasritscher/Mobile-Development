@@ -103,22 +103,22 @@ class Board extends React.Component {
         function checkHorizontal(i, j, player) {
             counter = 0
             while (squares[i][j] === player) {
-                i++
+                j++
                 counter++
-                if (i > rowAmount - 1) {
+                if (j > colAmount - 1) {
                     break
                 }
             }
-            i = positionI - 1
+            j = positionJ - 1
 
             while (squares[i][j] === player) {
-                i--
+                j--
                 counter++
-                if (i < 0) {
+                if (j < 0) {
                     break
                 }
             }
-
+            console.log('Horizontal: ' + counter);
             return counter >= 4;
 
         }
@@ -133,8 +133,8 @@ class Board extends React.Component {
                     break
                 }
             }
-            i = positionI - 1
-            j = positionJ - 1
+            i = positionI + 1
+            j = positionJ + 1
 
             while (squares[i][j] === player) {
                 i++
@@ -144,6 +144,8 @@ class Board extends React.Component {
                     break
                 }
             }
+
+            console.log('Diagonal Left: ' + counter);
 
             return counter >= 4;
 
@@ -159,7 +161,7 @@ class Board extends React.Component {
                     break
                 }
             }
-            i = positionI - 1
+            i = positionI + 1
             j = positionJ - 1
 
             while (squares[i][j] === player) {
@@ -170,18 +172,23 @@ class Board extends React.Component {
                     break
                 }
             }
+
+            console.log('Diagonal Right: ' + counter);
+
             return counter >= 4;
         }
 
         function checkVertical(i, j, player) {
             counter = 0
             while (squares[i][j] === player) {
-                j++
+                i++
                 counter++
-                if (j > colAmount - 1) {
+                if (i > rowAmount - 1) {
                     break
                 }
             }
+
+            console.log('Vertical: ' + counter);
             return counter >= 4;
         }
     }
