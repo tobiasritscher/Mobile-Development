@@ -136,6 +136,11 @@ class Board extends React.Component {
             i = positionI + 1
             j = positionJ + 1
 
+            if(!squares[i][j]){
+                console.log('WTF');
+                return false
+            }
+
             while (squares[i][j] === player) {
                 i++
                 j++
