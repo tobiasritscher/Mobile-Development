@@ -9,7 +9,7 @@ function App() {
     return (
         <div className="game">
             <div className="game-board">
-                <Board />
+                <Board/>
             </div>
             <div className="game-info">
                 <div>{/* status */}</div>
@@ -46,22 +46,24 @@ class Board extends React.Component {
 
     handleClick(i, j) {
         const squares = this.state.squares.slice();
-        var lowest = this.dropPiece(j);
+        const lowest = this.dropPiece(j);
 
-        if(this.state.nextTurn === 1){
+        if (this.state.nextTurn === 1) {
             squares[lowest][j] = 'blue';
-        }
-        else{
+        } else {
             squares[lowest][j] = 'red';
         }
         //this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1, });
-        this.setState({squares: squares,
-            nextTurn: this.state.nextTurn %2 + 1,
-            winner: this.checkWinner(i, j, this.state.squares[i][j])
+
+        const winner = this.checkWinner(lowest, j, this.state.squares[lowest][j])
+        this.setState({
+            squares: squares,
+            nextTurn: this.state.nextTurn % 2 + 1,
+            winner: winner
         })
     }
 
-    renderSquare(i,j) {
+    renderSquare(i, j) {
         return (
             <Square
                 value={this.state.squares[i][j]}
@@ -72,132 +74,115 @@ class Board extends React.Component {
     }
 
     dropPiece(j) {
-        for(let index = 5; index >= 0; index--)
-        if(this.state.squares[index][j] == null){
-            return index;
-        }
+        for (let index = 5; index >= 0; index--)
+            if (this.state.squares[index][j] == null) {
+                return index;
+            }
     }
 
-    resetBoard(){
+    resetBoard() {
         this.setState({
             squares: Array(rowAmount).fill(null).map(row => new Array(colAmount).fill(null)),
             nextTurn: 1,
-            winner: null
+            winner: ' '
         })
     }
 
-    checkWinner(i, j, player){
+    checkWinner(i, j, player) {
+        console.log("searching for winner: " + player + " i: " + i + " j: " + j)
         const squares = this.state.squares.slice()
-        var positionI = i
-        var positionJ = j
-        var counter = 0
+        const positionI = i;
+        const positionJ = j;
+        let counter = 0;
 
-        if(checkHorizontal(i, j, player) || checkDiagonalLeft(i, j, player) || checkDiagonalRIght(i, j, player) || checkVertical(i, j, player)){
+        if (checkHorizontal(i, j, player) || checkDiagonalLeft(i, j, player) || checkDiagonalRight(i, j, player) || checkVertical(i, j, player)) {
             return player
         }
         return ' '
 
         function checkHorizontal(i, j, player) {
             counter = 0
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i++
                 counter++
-                if(i > rowAmount-1){
+                if (i > rowAmount - 1) {
                     break
                 }
             }
-            i = positionI -1
+            i = positionI - 1
 
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i--
                 counter++
-                if(i < 0){
+                if (i < 0) {
                     break
                 }
             }
 
-            if(counter >= 4){
-                return true
-            }
-            return false
+            return counter >= 4;
+
         }
+
         function checkDiagonalLeft(i, j, player) {
             counter = 0
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i--
                 j--
                 counter++
-                if(i < 0 || j < 0){
+                if (i < 0 || j < 0) {
                     break
                 }
             }
-            i = positionI -1
-            j = positionJ -1
+            i = positionI - 1
+            j = positionJ - 1
 
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i++
                 j++
                 counter++
-                if(i > rowAmount-1 || j > colAmount-1){
+                if (i > rowAmount - 1 || j > colAmount - 1) {
                     break
                 }
             }
 
-            if(counter >= 4){
-                return true
-            }
-            return false
+            return counter >= 4;
+
         }
-        function checkDiagonalRIght(i, j, player) {
+
+        function checkDiagonalRight(i, j, player) {
             counter = 0
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i--
                 j++
                 counter++
-                if(i < 0 ||  j > colAmount-1){
+                if (i < 0 || j > colAmount - 1) {
                     break
                 }
             }
-            i = positionI -1
-            j = positionJ -1
+            i = positionI - 1
+            j = positionJ - 1
 
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 i++
                 j--
                 counter++
-                if(i > rowAmount-1 || j < 0){
+                if (i > rowAmount - 1 || j < 0) {
                     break
                 }
             }
-
-            if(counter >= 4){
-                return true
-            }
-            return false
+            return counter >= 4;
         }
+
         function checkVertical(i, j, player) {
             counter = 0
-            while(squares[i][j] === player){
+            while (squares[i][j] === player) {
                 j++
                 counter++
-                if(j > colAmount-1){
+                if (j > colAmount - 1) {
                     break
                 }
             }
-            j = positionJ -1
-
-            while(squares[i][j] === player){
-                j--
-                counter++
-                if(j < 0){
-                    break
-                }
-            }
-
-            if(counter >= 4){
-                return true
-            }
-            return false
+            return counter >= 4;
         }
     }
 
