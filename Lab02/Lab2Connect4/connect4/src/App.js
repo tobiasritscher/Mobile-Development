@@ -54,7 +54,6 @@ class Board extends React.Component {
             } else {
                 squares[lowest][j] = 'red';
             }
-            //this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1, });
 
             const winner = this.checkWinner(lowest, j, this.state.squares[lowest][j])
             this.setState({
@@ -127,7 +126,7 @@ class Board extends React.Component {
             }
             i = positionI + 1
             j = positionJ + 1
-            
+
             while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
                 counter++
                 i++
