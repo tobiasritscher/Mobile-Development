@@ -1,8 +1,8 @@
 import './App.css';
 import React from 'react';
 
-var rowAmount = 6;
-var colAmount = 7;
+const rowAmount = 6;
+const colAmount = 7;
 
 function App() {
 
@@ -40,27 +40,29 @@ class Board extends React.Component {
         this.state = {
             squares: Array(rowAmount).fill(null).map(row => new Array(colAmount).fill(null)),
             nextTurn: 1,
-            winner: null
+            winner: ' '
         };
     }
 
     handleClick(i, j) {
-        const squares = this.state.squares.slice();
-        const lowest = this.dropPiece(j);
+        if (this.state.winner !== 'blue' && this.state.winner !== 'red') {
+            const squares = this.state.squares.slice();
+            const lowest = this.dropPiece(j);
 
-        if (this.state.nextTurn === 1) {
-            squares[lowest][j] = 'blue';
-        } else {
-            squares[lowest][j] = 'red';
+            if (this.state.nextTurn === 1) {
+                squares[lowest][j] = 'blue';
+            } else {
+                squares[lowest][j] = 'red';
+            }
+            //this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1, });
+
+            const winner = this.checkWinner(lowest, j, this.state.squares[lowest][j])
+            this.setState({
+                squares: squares,
+                nextTurn: this.state.nextTurn % 2 + 1,
+                winner: winner
+            })
         }
-        //this.setState({squares: squares, nextTurn: this.state.nextTurn %2 + 1, });
-
-        const winner = this.checkWinner(lowest, j, this.state.squares[lowest][j])
-        this.setState({
-            squares: squares,
-            nextTurn: this.state.nextTurn % 2 + 1,
-            winner: winner
-        })
     }
 
     renderSquare(i, j) {
@@ -100,101 +102,69 @@ class Board extends React.Component {
         }
         return ' '
 
+        //help functions
         function checkHorizontal(i, j, player) {
             counter = 0
-            while (squares[i][j] === player) {
-                j++
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
                 counter++
-                if (j > colAmount - 1) {
-                    break
-                }
+                j++
             }
-            j = positionJ - 1
+            j = positionJ - 1 //reset position
 
-            while (squares[i][j] === player) {
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
                 j--
                 counter++
-                if (j < 0) {
-                    break
-                }
             }
-            console.log('Horizontal: ' + counter);
             return counter >= 4;
-
         }
 
         function checkDiagonalLeft(i, j, player) {
             counter = 0
-            while (squares[i][j] === player) {
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
+                counter++
                 i--
                 j--
-                counter++
-                if (i < 0 || j < 0) {
-                    break
-                }
             }
             i = positionI + 1
             j = positionJ + 1
-
-            if(!squares[i][j]){
-                console.log('WTF');
-                return false
-            }
-
-            while (squares[i][j] === player) {
+            
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
+                counter++
                 i++
                 j++
-                counter++
-                if (i > rowAmount - 1 || j > colAmount - 1) {
-                    break
-                }
             }
-
-            console.log('Diagonal Left: ' + counter);
-
             return counter >= 4;
-
         }
 
         function checkDiagonalRight(i, j, player) {
             counter = 0
-            while (squares[i][j] === player) {
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
+                counter++
                 i--
                 j++
-                counter++
-                if (i < 0 || j > colAmount - 1) {
-                    break
-                }
             }
             i = positionI + 1
             j = positionJ - 1
 
-            while (squares[i][j] === player) {
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
+                counter++
                 i++
                 j--
-                counter++
-                if (i > rowAmount - 1 || j < 0) {
-                    break
-                }
             }
-
-            console.log('Diagonal Right: ' + counter);
-
             return counter >= 4;
         }
 
         function checkVertical(i, j, player) {
             counter = 0
-            while (squares[i][j] === player) {
-                i++
+            while (isFieldInsideBoard(i, j) && squares[i][j] === player) {
                 counter++
-                if (i > rowAmount - 1) {
-                    break
-                }
+                i++
             }
-
-            console.log('Vertical: ' + counter);
             return counter >= 4;
+        }
+
+        function isFieldInsideBoard(i, j) {
+            return ((i > 0 && i < rowAmount) && (j > 0 && j < colAmount))
         }
     }
 
