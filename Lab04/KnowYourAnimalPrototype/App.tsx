@@ -48,7 +48,7 @@ const AnimalData = [
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionHeader}>Know your Animal Prototype!</Text>
+      <Text style={styles.title}>Know your Animal Prototype!</Text>
       <StatusBar style="auto" />
       <FlatListAnimals/>
     </View>
@@ -58,22 +58,35 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     paddingTop: 22
   },
-  sectionHeader: {
+  title:{
     paddingTop: 50,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 15,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  sectionHeader: {
+    paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 2,
     fontSize: 14,
     fontWeight: 'bold',
-    backgroundColor: 'rgba(247,247,247,1.0)',
+
   },
-  item: {
+  item1: {
     padding: 10,
     fontSize: 20,
     height: 60,
+  },
+  item2: {
+    padding: 10,
+    fontSize: 20,
+    height: 60,
+    backgroundColor: 'rgba(247,247,247,1.0)',
   },
 });
 
@@ -82,7 +95,7 @@ const FlatListAnimals = () => {
       <View style={styles.container}>
         <FlatList
             data={AnimalData}
-            renderItem={({ item }) => <ItemRender title={item.title} />}
+            renderItem={({ item }) => <ItemRender element={item} />}
             ItemSeparatorComponent={ItemDivider}
         />
       </View>
@@ -90,9 +103,9 @@ const FlatListAnimals = () => {
 }
 
 // @ts-ignore
-const ItemRender = ({ title }) => (
+const ItemRender = ({ element }) => (
     <View>
-      <Text style={styles.item}>{title}</Text>
+      <Text style={[styles.item1, (element.id % 2 == 0) && styles.item2]}>{element.title}</Text>
     </View>
 );
 
