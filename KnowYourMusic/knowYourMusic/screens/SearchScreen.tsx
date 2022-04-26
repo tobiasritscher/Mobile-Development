@@ -9,7 +9,7 @@ const Separator = () => (
 const TextField = (props) => {
     return (
         <TextInput
-            {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
+            {...props}
             editable
             maxLength={100}
         />
@@ -17,15 +17,12 @@ const TextField = (props) => {
 }
 
 const SearchScreen = () => {
-    const [value, onChangeText] = React.useState('');
-
-    // If you type something in the text box that is a color, the background will change to that
-    // color.
+    const [text, onChangeText] = React.useState('');
     return (
         <View style={styles.container}>
             <TextField
                 onChangeText={(text: React.SetStateAction<string>) => onChangeText(text)}
-                value={value}
+                value={text}
                 placeholder="input your Music search here"
                 style={styles.textField}
             />
@@ -33,7 +30,7 @@ const SearchScreen = () => {
             <Button
                 title="Search Music"
                 color="#FF5000"
-                onPress={() => Alert.alert('Simple Button pressed')}
+                onPress={() => Alert.alert(text)} //call the new screen with a list of all elements
             />
         </View>
     );
