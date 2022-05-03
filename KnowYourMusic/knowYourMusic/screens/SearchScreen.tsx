@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "react-native";
 
+
 const Separator = () => (
     <View style={styles.separator} />
 );
@@ -16,7 +17,8 @@ const TextField = (props) => {
     );
 }
 
-const SearchScreen = () => {
+// @ts-ignore
+const SearchScreen = ({ navigation }) => {
     const [text, onChangeText] = React.useState('');
     return (
         <View style={styles.container}>
@@ -30,7 +32,7 @@ const SearchScreen = () => {
             <Button
                 title="Search Music"
                 color="#FF5000"
-                onPress={() => Alert.alert(text)} //call the new screen with a list of all elements
+                onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
             />
         </View>
     );
