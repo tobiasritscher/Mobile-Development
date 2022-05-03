@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "react-native";
 
-
 const Separator = () => (
     <View style={styles.separator} />
 );
@@ -17,27 +16,13 @@ const TextField = (props) => {
     );
 }
 
-// @ts-ignore
-const SearchScreen = ({ navigation }) => {
-    const [text, onChangeText] = React.useState('');
+const DetailsScreen = () => {
     return (
         <View style={styles.container}>
-            <TextField
-                onChangeText={(text: React.SetStateAction<string>) => onChangeText(text)}
-                value={text}
-                placeholder="input your Music search here"
-                style={styles.textField}
-            />
-            <Separator/>
-            <Button
-                title="Search Music"
-                color="#FF5000"
-                onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
-            />
+            <Text>"Details"</Text>
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -56,5 +41,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SearchScreen;
-
+export default DetailsScreen;
