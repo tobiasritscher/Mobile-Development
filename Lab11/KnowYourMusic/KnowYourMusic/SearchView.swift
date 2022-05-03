@@ -8,20 +8,43 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var interpret: String = ""
-    @State private var text = ""
-    @State private var searchText = "type here..."
+    @State private var searchValue: String = ""
+    @State private var infoText = ""
+    @State private var textFieldValue = "type here..."
     @State private var selection: String? = nil
+    @State private var searchType = "Choose one"
+    @State private var groupIsExpanded = false
     
     @Binding var results: [Result]
     
     var body: some View {
         NavigationView{
             VStack{
-                NavigationLink(destination: SearchResults(results: $results, searchKey: $interpret), tag: "results", selection: $selection) { EmptyView() }
+                NavigationLink(destination: SearchResults(results: $results, searchKey: $searchValue), tag: "results", selection: $selection) { EmptyView() }
+                
+                HStack {
+                    Text("Search Type: ")
+                    GroupBox {
+                        DisclosureGroup(searchType, isExpanded: $groupIsExpanded) {
+                            Button("Song"){
+                                searchType = "Song"
+                                groupIsExpanded = false
+                            }.foregroundColor(Color.black)
+                            Button("Album"){
+                                searchType = "Album"
+                                groupIsExpanded = false
+                            }.foregroundColor(Color.black).padding(.vertical, 5)
+                            Button("Interpret"){
+                                searchType = "Interpret"
+                                groupIsExpanded = false
+                            }.foregroundColor(Color.black)
+                        }
+                    }.padding(.vertical, 10).background(Color.clear).foregroundColor(Color.black)
+                }
+                
                 HStack {
                     Text("Keyword: ")
-                    TextField(searchText, text: $interpret).onSubmit {
+                    TextField(textFieldValue, text: $searchValue).onSubmit {
                         search()
                     }
                 }.padding()
@@ -30,35 +53,39 @@ struct SearchView: View {
                     print("Button pressed")
                     search()
                 }
-                .padding(.vertical, 5.0)
+                .padding(.vertical, 10)
                 
-                Text(text)
+                Text(infoText)
+                if infoText == "loadinging..." {
+                    ProgressView()
+                }
             }.padding()
         }.task {
-            text = ""
-            searchText = "type here..."
+            infoText = ""
+            textFieldValue = "type here..."
         }
     }
     
     func search() {
-        text = "loading...."
+        infoText = "loading...."
         Task.init {
             if await loadData() {
                 if results.count > 0 {
                     selection = "results"
                 } else {
-                    text = "No Results found :("
+                    infoText = "No Results found :("
                 }
             } else {
-                text = "failed: wrong URL or invalid Data"
+                infoText = "failed: wrong URL or invalid Data"
             }
         }
     }
     
     
     func loadData() async -> Bool {
-        let interpretCorrected = clearSearch(searchValue: interpret)
-        guard let url = URL(string: "https://itunes.apple.com/search?term=\(interpretCorrected)&entity=song") else {
+        let searchValueCleaned = clearSearch(searchValue: searchValue)
+        print("https://itunes.apple.com/search?term=\(searchValueCleaned)&entity=\(searchType.lowercased())")
+        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&entity=\(searchType.lowercased())") else {
             print("Invalid URL")
             return false
         }
@@ -77,7 +104,7 @@ struct SearchView: View {
     }
     
     func clearSearch(searchValue: String) -> String {
-        searchValue.replacingOccurrences(of: " ", with: "+")
+        searchValue.lowercased().replacingOccurrences(of: " ", with: "+")
             .replacingOccurrences(of: "ö", with: "o")
             .replacingOccurrences(of: "ä", with: "a")
             .replacingOccurrences(of: "ü", with: "u")
