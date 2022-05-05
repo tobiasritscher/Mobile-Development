@@ -13,10 +13,19 @@ struct SearchResults: View {
     
     var body: some View {
             List(results, id: \.trackId) { item in
-                NavigationLink(destination: DetailView(item: item)) {
-                    VStack(alignment: .leading) {
-                        Text(item.trackName).font(.headline)
-                        Text(item.collectionName)
+                NavigationLink(destination: DetailView(item: item, results: [])) {
+                    HStack {
+                        AsyncImage(url: URL(string: item.artworkUrl100))
+                        { image in
+                            image.resizable()
+                        } placeholder: {
+                            ProgressView()
+                        }.frame(width: 60, height: 60)
+                        VStack(alignment: .leading) {
+                            Text(item.trackName).font(.headline)
+                            Text(item.artistName)
+                            Text(item.collectionName)
+                        }
                     }
                 }
             }

@@ -12,10 +12,15 @@ struct SearchView: View {
     @State private var infoText = ""
     @State private var textFieldValue = "type here..."
     @State private var selection: String? = nil
-    @State private var searchType = "Choose one"
+    @State private var searchName = "Choose one"
+    @State private var searchType = "songTerm"
     @State private var groupIsExpanded = false
     
     @Binding var results: [Result]
+
+    var songSearch = searchKeys(name: "Song", value:"songTerm")
+    var albumSearch = searchKeys(name: "Album", value:"albumTerm")
+    var interpretSearch = searchKeys(name: "Interpret", value:"artistTerm")
     
     var body: some View {
         NavigationView{
@@ -25,17 +30,20 @@ struct SearchView: View {
                 HStack {
                     Text("Search Type: ")
                     GroupBox {
-                        DisclosureGroup(searchType, isExpanded: $groupIsExpanded) {
-                            Button("Song"){
-                                searchType = "Song"
+                        DisclosureGroup(searchName, isExpanded: $groupIsExpanded) {
+                            Button(songSearch.name){
+                                searchType = songSearch.value
+                                searchName = songSearch.name
                                 groupIsExpanded = false
                             }.foregroundColor(Color.secondary)
-                            Button("Album"){
-                                searchType = "Album"
+                            Button(albumSearch.name){
+                                searchType = albumSearch.value
+                                searchName = albumSearch.name
                                 groupIsExpanded = false
                             }.foregroundColor(Color.secondary).padding(.vertical, 5)
-                            Button("Interpret"){
-                                searchType = "Interpret"
+                            Button(interpretSearch.name){
+                                searchType = interpretSearch.value
+                                searchName = interpretSearch.name
                                 groupIsExpanded = false
                             }.foregroundColor(Color.secondary)
                         }
@@ -58,10 +66,10 @@ struct SearchView: View {
                 if infoText == "loading...." {
                     ProgressView()
                 }
-            }.padding()
-        }.task {
-            infoText = ""
-            textFieldValue = "type here..."
+            }.padding().task {
+                infoText = ""
+                textFieldValue = "type here..."
+            }
         }
     }
     
@@ -83,8 +91,7 @@ struct SearchView: View {
     
     func loadData() async -> Bool {
         let searchValueCleaned = clearSearch(searchValue: searchValue)
-        print("https://itunes.apple.com/search?term=\(searchValueCleaned)&entity=\(searchType.lowercased())")
-        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&entity=\(searchType.lowercased())") else {
+        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&country=ch&media=music&attribute=\(searchType)&entity=song") else {
             print("Invalid URL")
             return false
         }
@@ -103,13 +110,17 @@ struct SearchView: View {
     }
     
     func clearSearch(searchValue: String) -> String {
-        searchValue.lowercased().replacingOccurrences(of: " ", with: "+")
+        searchValue.replacingOccurrences(of: " ", with: "+")
             .replacingOccurrences(of: "ö", with: "o")
             .replacingOccurrences(of: "ä", with: "a")
             .replacingOccurrences(of: "ü", with: "u")
     }
 }
 
+struct searchKeys {
+    var name: String
+    var value: String
+}
 
 struct Response: Codable {
     var results: [Result]
@@ -119,8 +130,10 @@ struct Result: Codable {
     var trackId: Int
     var trackName: String
     var collectionName: String
+    var artworkUrl60: String
     var artworkUrl100: String
     var previewUrl: String
     var artistName: String
     var trackViewUrl: String
+    var collectionId: Int
 }
