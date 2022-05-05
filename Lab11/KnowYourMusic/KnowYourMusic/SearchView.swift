@@ -29,17 +29,17 @@ struct SearchView: View {
                             Button("Song"){
                                 searchType = "Song"
                                 groupIsExpanded = false
-                            }.foregroundColor(Color.black)
+                            }.foregroundColor(Color.secondary)
                             Button("Album"){
                                 searchType = "Album"
                                 groupIsExpanded = false
-                            }.foregroundColor(Color.black).padding(.vertical, 5)
+                            }.foregroundColor(Color.secondary).padding(.vertical, 5)
                             Button("Interpret"){
                                 searchType = "Interpret"
                                 groupIsExpanded = false
-                            }.foregroundColor(Color.black)
+                            }.foregroundColor(Color.secondary)
                         }
-                    }.padding(.vertical, 10).background(Color.clear).foregroundColor(Color.black)
+                    }.padding(.vertical, 10).background(Color.clear).foregroundColor(Color.secondary)
                 }
                 
                 HStack {
@@ -50,13 +50,12 @@ struct SearchView: View {
                 }.padding()
                 
                 Button("Search"){
-                    print("Button pressed")
                     search()
                 }
                 .padding(.vertical, 10)
                 
                 Text(infoText)
-                if infoText == "loadinging..." {
+                if infoText == "loading...." {
                     ProgressView()
                 }
             }.padding()
