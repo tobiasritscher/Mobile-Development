@@ -10,10 +10,11 @@ import SwiftUI
 struct KnowYourMusicApp: App {
     let persistenceController = PersistenceController.shared
     @State var results = [Result]()
+    @State var resultCount = -1
 
     var body: some Scene {
         WindowGroup {
-            SearchView(results: $results)
+            SearchView(results: $results, resultCount: $resultCount)
 
         }
     }

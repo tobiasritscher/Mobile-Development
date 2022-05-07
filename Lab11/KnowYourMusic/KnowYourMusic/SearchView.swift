@@ -14,37 +14,33 @@ struct SearchView: View {
     @State private var selection: String? = nil
     @State private var searchName = "Choose one"
     @State private var searchType = "songTerm"
+    @State private var searchEntity = "musicTrack"
     @State private var groupIsExpanded = false
     
     @Binding var results: [Result]
+    @Binding var resultCount: Int
 
-    var songSearch = searchKeys(name: "Song", value:"songTerm")
-    var albumSearch = searchKeys(name: "Album", value:"albumTerm")
-    var interpretSearch = searchKeys(name: "Interpret", value:"artistTerm")
+    var songSearch = searchKeys(name: "Song", value:"songTerm", entity: "musicTrack")
+    var albumSearch = searchKeys(name: "Album", value:"albumTerm", entity: "album")
+    var interpretSearch = searchKeys(name: "Interpret", value:"artistTerm", entity: "musicArtist")
     
     var body: some View {
         NavigationView{
             VStack{
-                NavigationLink(destination: SearchResults(results: $results, searchKey: $searchValue), tag: "results", selection: $selection) { EmptyView() }
+                NavigationLink(destination: SearchResults(results: $results, searchType: $searchName), tag: "results", selection: $selection) { EmptyView() }
                 
                 HStack {
                     Text("Search Type: ")
                     GroupBox {
                         DisclosureGroup(searchName, isExpanded: $groupIsExpanded) {
                             Button(songSearch.name){
-                                searchType = songSearch.value
-                                searchName = songSearch.name
-                                groupIsExpanded = false
+                                changeSearchTerms(terms: songSearch)
                             }.foregroundColor(Color.secondary)
                             Button(albumSearch.name){
-                                searchType = albumSearch.value
-                                searchName = albumSearch.name
-                                groupIsExpanded = false
+                                changeSearchTerms(terms: albumSearch)
                             }.foregroundColor(Color.secondary).padding(.vertical, 5)
                             Button(interpretSearch.name){
-                                searchType = interpretSearch.value
-                                searchName = interpretSearch.name
-                                groupIsExpanded = false
+                                changeSearchTerms(terms: interpretSearch)
                             }.foregroundColor(Color.secondary)
                         }
                     }.padding(.vertical, 10).background(Color.clear).foregroundColor(Color.secondary)
@@ -52,8 +48,19 @@ struct SearchView: View {
                 
                 HStack {
                     Text("Keyword: ")
-                    TextField(textFieldValue, text: $searchValue).onSubmit {
-                        search()
+                    HStack {
+                        TextField(textFieldValue, text: $searchValue).onSubmit {
+                            search()
+                        }
+
+                        if searchValue.count > 0 {
+                            Image(systemName: "x.circle.fill")
+                                .font(.system(size: 17))
+                                .onTapGesture {
+                                    searchValue = ""
+                                }
+                        }
+                        
                     }
                 }.padding()
                 
@@ -68,9 +75,15 @@ struct SearchView: View {
                 }
             }.padding().task {
                 infoText = ""
-                textFieldValue = "type here..."
             }
         }
+    }
+    
+    func changeSearchTerms(terms: searchKeys) {
+        searchType = terms.value
+        searchName = terms.name
+        searchEntity = terms.entity
+        groupIsExpanded = false
     }
     
     func search() {
@@ -79,9 +92,11 @@ struct SearchView: View {
             if await loadData() {
                 if results.count > 0 {
                     selection = "results"
+                    print("Wrapper Type: \(results[0].wrapperType!)")
                 } else {
                     infoText = "No Results found :("
                 }
+                print(resultCount)
             } else {
                 infoText = "failed: wrong URL or invalid Data"
             }
@@ -91,7 +106,7 @@ struct SearchView: View {
     
     func loadData() async -> Bool {
         let searchValueCleaned = clearSearch(searchValue: searchValue)
-        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&country=ch&media=music&attribute=\(searchType)&entity=song") else {
+        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&country=ch&media=music&attribute=\(searchType)&entity=\(searchEntity)") else {
             print("Invalid URL")
             return false
         }
@@ -101,6 +116,7 @@ struct SearchView: View {
             
             if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
                 results = decodedResponse.results
+                resultCount = decodedResponse.resultCount
             }
             return true
         } catch {
@@ -120,20 +136,27 @@ struct SearchView: View {
 struct searchKeys {
     var name: String
     var value: String
+    var entity: String
 }
 
 struct Response: Codable {
     var results: [Result]
+    var resultCount: Int
 }
 
 struct Result: Codable {
-    var trackId: Int
-    var trackName: String
-    var collectionName: String
-    var artworkUrl60: String
-    var artworkUrl100: String
-    var previewUrl: String
-    var artistName: String
-    var trackViewUrl: String
-    var collectionId: Int
+    var wrapperType: String!
+    var artistId: Int!
+    var trackId: Int?
+    var trackName: String?
+    var collectionName: String?
+    var artworkUrl60: String?
+    var artworkUrl100: String?
+    var previewUrl: String?
+    var artistName: String?
+    var trackViewUrl: String?
+    var collectionId: Int?
+    var trackCount: Int?
+    var releaseDate: String?
+    var primaryGenreName: String?
 }
