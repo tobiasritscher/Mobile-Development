@@ -21,10 +21,12 @@ class SoundManager : ObservableObject {
 }
 
 struct DetailView: View {
-    let item: Result
+    @State var item: Result
     @State var song1 = false
     @StateObject private var soundManager = SoundManager()
     @State var results: [Titel]
+    @State var songResults: [Result]
+    let titelId: Int?
     
     var body: some View {
         VStack {
@@ -62,10 +64,18 @@ struct DetailView: View {
             if item.wrapperType == "collection" {
                 GroupBox {
                     List(results.indices, id: \.self) { index in
-                        NavigationLink(destination: DetailView(item: item, results: [])) {
+                        NavigationLink(destination: DetailView(item: item, results: [], songResults: [], titelId: results[index].trackId!)) {
                             VStack(alignment: .leading) {
                                 Text("\(index + 1)   \(results[index].trackName ?? "missing data")")
                             }
+                        }
+                    }
+                }
+            } else if item.wrapperType == "artist" {
+                GroupBox {
+                    NavigationLink(destination: SearchResults(results: results, searchType: <#T##String#>)) {
+                        VStack(alignment: .leading) {
+                            Text("show Titels of \(item.artistName)")
                         }
                     }
                 }
@@ -75,17 +85,62 @@ struct DetailView: View {
         .onAppear() {
             results.removeAll()
             Task.init {
-                if item.wrapperType == "collection" {
-                    if await loadData() {
-                        print("success")
-                        if results.count > 0 && results[0].trackName == nil {
-                            results.remove(at: 0)
+                if titelId != nil {
+                    await getTitel(id: titelId!)
+                } else {
+                    if item.wrapperType == "collection" {
+                        if await loadData() {
+                            print("success")
+                            if results.count > 0 && results[0].trackName == nil {
+                                results.remove(at: 0)
+                            }
+                        } else {
+                            print("failed")
                         }
-                    } else {
-                        print("failed")
+                    } else if item.wrapperType == "artist" {
+                        if await loadCollections() {
+                            print("success")
+                            if results.count > 0 && results[0].trackName == nil {
+                                results.remove(at: 0)
+                            }
+                        } else {
+                            print("failed")
+                        }
                     }
                 }
             }
+        }
+    }
+    
+    func getTitel(id: Int) async {
+        if await loadTitel(id: id) {
+            print("success")
+            if results.count > 0 && results[0].trackName == nil {
+                results.remove(at: 0)
+            }
+        } else {
+            print("failed")
+        }
+        item = songResults[0]
+    }
+    
+    func loadTitel(id: Int) async -> Bool {
+        guard let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)&entity=song") else {
+            print("Invalid URL")
+            return false
+        }
+        do {
+            print("loading data")
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
+                songResults = decodedResponse.results
+                print(songResults)
+            }
+            return true
+        } catch {
+            print("Invalid data")
+            return false
         }
     }
     
@@ -108,6 +163,26 @@ struct DetailView: View {
             return false
         }
     }
+    
+    func loadCollections() async -> Bool {
+        guard let url = URL(string: "https://itunes.apple.com/lookup?id=\(item.artistId!)&entity=album") else {
+            print("Invalid URL")
+            return false
+        }
+        do {
+            print("loading data")
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
+                songResults = decodedResponse.results
+                print(results)
+            }
+            return true
+        } catch {
+            print("Invalid data")
+            return false
+        }
+    }
 }
 
 struct TitelResponse: Codable {
@@ -115,6 +190,7 @@ struct TitelResponse: Codable {
 }
 
 struct Titel: Codable {
+    var wrapperType: String!
     var artistId: Int
     var trackId: Int?
     var trackName: String?
