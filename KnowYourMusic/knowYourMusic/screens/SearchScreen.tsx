@@ -6,8 +6,7 @@ const Separator = () => (
     <View style={styles.separator} />
 );
 
-// @ts-ignore
-const TextField = (props) => {
+const TextField = ({props}) => {
     return (
         <TextInput
             {...props}
@@ -17,8 +16,7 @@ const TextField = (props) => {
     );
 }
 
-// @ts-ignore
-const SearchScreen = ({ navigation }) => {
+function SearchScreen ({ navigation }) {
     const [text, onChangeText] = React.useState('');
     return (
         <View style={styles.container}>
@@ -32,7 +30,8 @@ const SearchScreen = ({ navigation }) => {
             <Button
                 title="Search Music"
                 color="#FF5000"
-                onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
+                //onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
+                onPress={() => navigation.navigate('Details')}
             />
         </View>
     );

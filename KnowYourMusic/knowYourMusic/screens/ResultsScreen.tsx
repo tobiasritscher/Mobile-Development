@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "reac
 import { getMusic } from '../hooks/useMusic'
 import { Music } from '../types'
 
-// @ts-ignore
-const ResultsScreen = ({ route, navigation }) => {
+
+function ResultsScreen = ({ route}) => {
     const category = route.params.category
     const { data, isLoading } = getMusic(category)
     console.log(data)
