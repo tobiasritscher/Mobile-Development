@@ -24,7 +24,8 @@ function ResultsScreen ({ route, navigation }: Props) {
                         collectionName={item.collectionName}
                         artistName={item.artistName}
                         artworkUrl100={item.artworkUrl100}
-                        onPress={() => navigation.navigate('DetailsScreen', {item})}/><Separator/></>
+                        onPress={() => navigation.navigate('DetailsScreen', {item})}/>
+                        <Separator/></>
                 )}
 
                 keyExtractor={(item) => item.previewUrl}

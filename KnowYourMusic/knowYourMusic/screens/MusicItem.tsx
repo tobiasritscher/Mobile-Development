@@ -11,9 +11,9 @@ function MusicItem({trackName, collectionName, artistName, artworkUrl100, onPres
             <View style={styles.containerRow}>
                 <Image style={styles.image} source={artworkUrl100} />
                 <View style={styles.containerCol}>
-                    <Text style={styles.trackName}>{trackName}</Text>
-                    <Text style={styles.collectionName}>{collectionName}</Text>
-                    <Text style={styles.artistName}>{artistName}</Text>
+                    <Text style={styles.largeFont}>{trackName}</Text>
+                    <Text style={styles.mediumFont}>{collectionName}</Text>
+                    <Text style={styles.smallFont}>{artistName}</Text>
                 </View>
             </View>
         </TouchableHighlight>
@@ -39,15 +39,15 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginBottom: 5,
     },
-    trackName: {
+    largeFont: {
         color: '#000',
         fontSize: 22
     },
-    collectionName: {
+    mediumFont: {
         color: '#000',
         fontSize: 16
     },
-    artistName: {
+    smallFont: {
         color: '#000',
         fontSize: 10
     }

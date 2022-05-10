@@ -10,8 +10,14 @@ const Separator = () => (
 const DetailsScreen = ({ route, navigation }: Props) => {
     const item = route.params?.item
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.containerCol}>
             <Image style={styles.image} source={item.artworkUrl100} />
+            <Separator/>
+            <View style={styles.containerRow}>
+                <Text style={styles.smallFont}>{item.trackId}</Text>
+                <Text style={styles.largeFont}>{item.trackName}</Text>
+            </View>
+
         </View>
     );
 }
@@ -20,8 +26,12 @@ const styles = StyleSheet.create({
     containerRow: {
         flex: 1,
         justifyContent: 'center',
+        flexDirection: "row",
         marginHorizontal: 16,
         width: 300
+    },
+    containerCol:{
+        flexDirection: "column"
     },
     textField:{
         height: 50
@@ -34,6 +44,18 @@ const styles = StyleSheet.create({
     image: {
         width: 100,
         height: 100,
+    },
+    largeFont: {
+        color: '#000',
+        fontSize: 22
+    },
+    mediumFont: {
+        color: '#000',
+        fontSize: 16
+    },
+    smallFont: {
+        color: '#000',
+        fontSize: 10
     },
 });
 
