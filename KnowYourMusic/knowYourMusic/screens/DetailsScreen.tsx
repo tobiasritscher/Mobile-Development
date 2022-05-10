@@ -16,10 +16,13 @@ const TextField = (props) => {
     );
 }
 
-const DetailsScreen = () => {
+const DetailsScreen = ({navigation}) => {
     return (
-        <View style={styles.container}>
-            <Text>"Details"</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Button
+                title="Go to Profile"
+                onPress={() => navigation.navigate('Profile')}
+            />
         </View>
     );
 }
