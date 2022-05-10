@@ -9,15 +9,19 @@ const Separator = () => (
 );
 
 function SearchScreen ({ route, navigation }: Props) {
-    const [text, onChangeText] = React.useState('');
+    const [text, onChangeText] = React.useState('Hello');
+
+    const onTextChange = (text: any) => {
+        onChangeText(text.target.value)
+    }
+
     return (
         <View>
             <TextInput
                 value={text}
                 placeholder="input your Music search here"
                 style={styles.textField}
-                editable
-                maxLength={100}
+                onChange={onTextChange}
             />
             <Separator/>
             <Button
