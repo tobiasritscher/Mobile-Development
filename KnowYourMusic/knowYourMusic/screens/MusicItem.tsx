@@ -5,15 +5,15 @@ import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
 function MusicItem({trackName, collectionName, artistName, artworkUrl100, onPress }: any) {
     return (
         <TouchableHighlight
-            underlayColor={'#ff9'}
+            underlayColor={'#bbb'}
             onPress={onPress}
         >
-            <View style={styles.container}>
+            <View style={styles.containerRow}>
                 <Image style={styles.image} source={artworkUrl100} />
-                <View>
-                    <Text style={styles.role}>{collectionName}</Text>
-                    <Text style={styles.name}>{trackName}</Text>
-                    <Text style={styles.email}>{artistName}</Text>
+                <View style={styles.containerCol}>
+                    <Text style={styles.trackName}>{trackName}</Text>
+                    <Text style={styles.collectionName}>{collectionName}</Text>
+                    <Text style={styles.artistName}>{artistName}</Text>
                 </View>
             </View>
         </TouchableHighlight>
@@ -21,11 +21,14 @@ function MusicItem({trackName, collectionName, artistName, artworkUrl100, onPres
 }
 
 const styles = StyleSheet.create({
-    container:{
+    containerRow:{
         flexDirection: "row"
     },
+    containerCol:{
+        flexDirection: "column"
+    },
     roles: {
-        color: '#bbb'
+        color: '#fff'
     },
     image: {
         width: 70,
@@ -36,17 +39,17 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginBottom: 5,
     },
-    name: {
-        color: '#fff',
-        fontSize: 18
+    trackName: {
+        color: '#000',
+        fontSize: 22
     },
-    role: {
-        color: '#fff',
-        fontSize: 20
+    collectionName: {
+        color: '#000',
+        fontSize: 16
     },
-    email: {
-        color: '#fff',
-        fontSize: 12
+    artistName: {
+        color: '#000',
+        fontSize: 10
     }
 })
 
