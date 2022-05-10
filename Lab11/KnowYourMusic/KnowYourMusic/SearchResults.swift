@@ -15,14 +15,14 @@ struct SearchResults: View {
             List(results, id: \.artistId) { item in
                 switch item.wrapperType {
                 case "artist":
-                    NavigationLink(destination: DetailView(item: item, results: [])) {
+                    NavigationLink(destination: DetailView(item: item, results: [], songResults: [], titelId: nil)) {
                         VStack(alignment: .leading) {
                             Text(item.artistName ?? "missing data").font(.headline)
                             Text(item.primaryGenreName ?? "missing data")
                         }
                     }
                 case "collection":
-                    NavigationLink(destination: DetailView(item: item, results: [])) {
+                    NavigationLink(destination: DetailView(item: item, results: [], songResults: [], titelId: nil)) {
                         HStack {
                             AsyncImage(url: URL(string: item.artworkUrl100 ?? "questionmark.circle.fill"))
                             { image in
@@ -38,7 +38,7 @@ struct SearchResults: View {
                         }
                     }
                 default:
-                    NavigationLink(destination: DetailView(item: item, results: [])) {
+                    NavigationLink(destination: DetailView(item: item, results: [], songResults: [], titelId: nil)) {
                         HStack {
                             AsyncImage(url: URL(string: item.artworkUrl100!))
                             { image in
