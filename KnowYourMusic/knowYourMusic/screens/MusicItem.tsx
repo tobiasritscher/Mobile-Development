@@ -1,19 +1,19 @@
 import React from 'react'
 import {StyleSheet, View, Text, Image, TouchableHighlight} from 'react-native';
-import colors from "../config/colors";
 
-function LeadershipItem({name, roles, email, image, onPress }) {
+
+function MusicItem({trackName, collectionName, artistName, artworkUrl100, onPress }: any) {
     return (
         <TouchableHighlight
-            underlayColor={colors.light}
+            underlayColor={'#ff9'}
             onPress={onPress}
         >
             <View style={styles.container}>
-                <Image style={styles.image} source={image} />
+                <Image style={styles.image} source={artworkUrl100} />
                 <View>
-                    <Text style={styles.role}>{roles}</Text>
-                    <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.email}>{email}</Text>
+                    <Text style={styles.role}>{collectionName}</Text>
+                    <Text style={styles.name}>{trackName}</Text>
+                    <Text style={styles.email}>{artistName}</Text>
                 </View>
             </View>
         </TouchableHighlight>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     roles: {
-        color: colors.riesbach
+        color: '#bbb'
     },
     image: {
         width: 70,
@@ -37,17 +37,17 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     name: {
-        color: colors.white,
+        color: '#fff',
         fontSize: 18
     },
     role: {
-        color: colors.white,
+        color: '#fff',
         fontSize: 20
     },
     email: {
-        color: colors.white,
+        color: '#fff',
         fontSize: 12
     }
 })
 
-export default LeadershipItem;
+export default MusicItem;

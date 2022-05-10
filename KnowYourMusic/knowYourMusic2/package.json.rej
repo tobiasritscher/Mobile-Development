@@ -1,9 +1,0 @@
-diff a/package.json b/package.json	(rejected hunks)
-@@ -22,7 +22,6 @@
-     "expo-constants": "~9.3.3",
-     "expo-status-bar": "~1.0.3",
-     "formik": "^2.2.6",
--    "joi": "^17.4.0",
-     "hosted-git-info": "^4.0.2",
-     "jest-html-reporter": "^3.3.0",
-     "jwt-decode": "^3.1.2",
