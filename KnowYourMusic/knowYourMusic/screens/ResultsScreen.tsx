@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "react-native";
 import { getMusic } from '../hooks/useMusic'
-import { Music } from '../types'
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type Props = NativeStackScreenProps<any>
 
-
-function ResultsScreen = ({ route}) => {
-    const category = route.params.category
-    const { data, isLoading } = getMusic(category)
-    console.log(data)
+function ResultsScreen ({ route, navigation }: Props) {
+    //const category = route.params.category
+    const { data, isLoading } = getMusic("")
+    console.log(route)
 
     return (
         <View style={styles.container}>

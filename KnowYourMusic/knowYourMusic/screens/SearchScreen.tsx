@@ -1,37 +1,30 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "react-native";
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+type Props = NativeStackScreenProps<any>
 
 const Separator = () => (
     <View style={styles.separator} />
 );
 
-const TextField = ({props}) => {
-    return (
-        <TextInput
-            {...props}
-            editable
-            maxLength={100}
-        />
-    );
-}
-
-function SearchScreen ({ navigation }) {
+function SearchScreen ({ route, navigation }: Props) {
     const [text, onChangeText] = React.useState('');
     return (
-        <View style={styles.container}>
-            <TextField
-                onChangeText={(text: React.SetStateAction<string>) => onChangeText(text)}
+        <View>
+            <TextInput
                 value={text}
                 placeholder="input your Music search here"
                 style={styles.textField}
+                editable
+                maxLength={100}
             />
             <Separator/>
             <Button
                 title="Search Music"
                 color="#FF5000"
                 //onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
-                onPress={() => navigation.navigate('Details')}
+                onPress={() => navigation.navigate('ResultsScreen')}
             />
         </View>
     );

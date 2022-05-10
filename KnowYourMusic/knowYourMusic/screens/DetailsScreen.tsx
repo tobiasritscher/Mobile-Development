@@ -1,22 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Button, Alert } from "react-native";
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type Props = NativeStackScreenProps<any>
 
-const Separator = () => (
-    <View style={styles.separator} />
-);
-
-// @ts-ignore
-const TextField = (props) => {
-    return (
-        <TextInput
-            {...props}
-            editable
-            maxLength={100}
-        />
-    );
-}
-
-const DetailsScreen = ({navigation}) => {
+const DetailsScreen = ({ route, navigation }: Props) => {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button
