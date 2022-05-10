@@ -16,18 +16,19 @@ struct SearchView: View {
     @State private var searchType = "songTerm"
     @State private var searchEntity = "musicTrack"
     @State private var groupIsExpanded = false
+    @State private var wrapperType = "song"
     
     @Binding var results: [Result]
     @Binding var resultCount: Int
 
-    var songSearch = searchKeys(name: "Song", value:"songTerm", entity: "musicTrack")
+    var songSearch = searchKeys(name: "Song", value:"songTerm", entity: "song")
     var albumSearch = searchKeys(name: "Album", value:"albumTerm", entity: "album")
     var interpretSearch = searchKeys(name: "Interpret", value:"artistTerm", entity: "musicArtist")
     
     var body: some View {
         NavigationView{
             VStack{
-                NavigationLink(destination: SearchResults(results: $results, searchType: $searchName), tag: "results", selection: $selection) { EmptyView() }
+                NavigationLink(destination: SearchResults(results: $results, searchType: $searchName, wrapperType: wrapperType), tag: "results", selection: $selection) { EmptyView() }
                 
                 HStack {
                     Text("Search Type: ")
@@ -91,8 +92,9 @@ struct SearchView: View {
         Task.init {
             if await loadData() {
                 if results.count > 0 {
+                    wrapperType = results[0].wrapperType!
                     selection = "results"
-                    print("Wrapper Type: \(results[0].wrapperType!)")
+                    print("Wrapper Type: \(wrapperType)")
                 } else {
                     infoText = "No Results found :("
                 }

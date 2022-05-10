@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import MusicKit
 
 class SoundManager : ObservableObject {
     var audioPlayer: AVPlayer?
@@ -28,6 +29,9 @@ struct DetailView: View {
     
     @State private var searchName = "Song"
     @State private var selection: String? = nil
+    @State private var wrapperType = "song"
+    @State private var loadingOne = false;
+    @State private var loadingTwo = false;
     
     let titelId: Int?
     
@@ -56,6 +60,7 @@ struct DetailView: View {
                                 soundManager.audioPlayer?.pause()
                             }
                         }
+                        
                     }
                 }.padding()
             }
@@ -75,23 +80,39 @@ struct DetailView: View {
                     }
                 }
             } else if item.wrapperType == "artist" {
-                NavigationLink(destination: SearchResults(results: $results, searchType: $searchName), tag: "results", selection: $selection) { EmptyView() }
+                NavigationLink(destination: SearchResults(results: $results, searchType: $searchName, wrapperType: wrapperType), tag: "results", selection: $selection) { EmptyView() }
                 
-                Button("Show Titels of \(item.artistName!)"){
-                    searchName = "Song"
-                    search(id: item.artistId!, entity: "musicTrack")
-                }.padding()
+                HStack {
+                    Button("Show Titels of \(item.artistName!)"){
+                        loadingOne = true;
+                        wrapperType = "track"
+                        search(id: item.artistId!, entity: "song")
+                        results.remove(at: 0)
+                        searchName = "Song"
+                    }.padding()
+                    if loadingOne {
+                        ProgressView()
+                    }
+                }
                 
-                
-                Button("Show Albums of \(item.artistName!)"){
-                    searchName = "Album"
-                    search(id: item.artistId!, entity: "album")
-                    print(results)
+                HStack {
+                    Button("Show Albums of \(item.artistName!)"){
+                        loadingTwo = true;
+                        wrapperType = "collection"
+                        search(id: item.artistId!, entity: "album")
+                        results.remove(at: 0)
+                        searchName = "Album"
+                    }.padding()
+                    if loadingTwo {
+                        ProgressView()
+                    }
                 }
             }
         }
         .navigationTitle((item.trackName ?? item.collectionName ?? item.artistName ?? "missing data").split(separator: "(")[0]).padding()
         .onAppear() {
+            loadingOne = false;
+            loadingTwo = false;
             results.removeAll()
             Task.init {
                 if titelId != nil {
@@ -143,7 +164,7 @@ struct DetailView: View {
     }
     
     func loadData(id: Int, entity: String) async -> Bool {
-        guard let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)&entity=\(entity)") else {
+        guard let url = URL(string: "https://itunes.apple.com/lookup?id=\(id)&entity=\(entity)&limit=200") else {
             print("Invalid URL")
             return false
         }
