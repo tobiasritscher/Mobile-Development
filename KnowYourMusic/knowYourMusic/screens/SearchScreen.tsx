@@ -27,8 +27,8 @@ function SearchScreen ({ route, navigation }: Props) {
             <Button
                 title="Search Music"
                 color="#FF5000"
-                //onPress={() => navigation.navigate('Results', {text, navigation})} //call the new screen with a list of all elements
-                onPress={() => navigation.navigate('ResultsScreen')}
+                onPress={() => navigation.navigate('ResultsScreen', {text})} //call the new screen with a list of all elements
+                //onPress={() => navigation.navigate('ResultsScreen')}
             />
         </View>
     );
@@ -36,7 +36,7 @@ function SearchScreen ({ route, navigation }: Props) {
 
 
 const styles = StyleSheet.create({
-    container: {
+    containerRow: {
         flex: 1,
         justifyContent: 'center',
         marginHorizontal: 16,
