@@ -13,11 +13,12 @@ const DetailsScreen = ({ route, navigation }: Props) => {
         <View style={styles.containerCol}>
             <Image style={styles.image} source={item.artworkUrl100} />
             <Separator/>
-            <View style={styles.containerRow}>
-                <Text style={styles.smallFont}>{item.trackId}</Text>
-                <Text style={styles.largeFont}>{item.trackName}</Text>
-            </View>
-
+            <Text style={styles.largeFont}>{item.trackName}</Text>
+            <Text style={styles.largeFont}>{item.collectionName}</Text>
+            <Text style={styles.largeFont}>{item.artistName}</Text>
+            <Separator/>
+            <Text style={styles.mediumFont}>{item.releaseDate}</Text>
+            <Text style={styles.mediumFont}>{item.primaryGenreName}</Text>
         </View>
     );
 }
@@ -31,10 +32,8 @@ const styles = StyleSheet.create({
         width: 300
     },
     containerCol:{
+        justifyContent: 'center',
         flexDirection: "column"
-    },
-    textField:{
-        height: 50
     },
     separator: {
         marginVertical: 8,
