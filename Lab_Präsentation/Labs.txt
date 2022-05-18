@@ -1,7 +1,7 @@
 
 Lab01;06;10;11;12 = MiniProject
 
-Lab02;03 = Connect4
+Lab02;03 = Connect4 https://ritscher.ch/moba2/
 
 Lab04 = React Native MiniProject
 
