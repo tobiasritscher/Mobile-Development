@@ -106,26 +106,26 @@ struct SearchView: View {
     }
     
     
-    func loadData() async -> Bool {
-        let searchValueCleaned = clearSearch(searchValue: searchValue)
-        guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&country=ch&media=music&attribute=\(searchType)&entity=\(searchEntity)") else {
-            print("Invalid URL")
-            return false
-        }
-        do {
-            print("loading data")
-            let (data, _) = try await URLSession.shared.data(from: url)
-            
-            if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
-                results = decodedResponse.results
-                resultCount = decodedResponse.resultCount
-            }
-            return true
-        } catch {
-            print("Invalid data")
-            return false
-        }
+func loadData() async -> Bool {
+    let searchValueCleaned = clearSearch(searchValue: searchValue)
+    guard let url = URL(string: "https://itunes.apple.com/search?term=\(searchValueCleaned)&country=ch&media=music&attribute=\(searchType)&entity=\(searchEntity)") else {
+        print("Invalid URL")
+        return false
     }
+    do {
+        print("loading data")
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data) {
+            results = decodedResponse.results
+            resultCount = decodedResponse.resultCount
+        }
+        return true
+    } catch {
+        print("Invalid data")
+        return false
+    }
+}
     
     func clearSearch(searchValue: String) -> String {
         searchValue.replacingOccurrences(of: " ", with: "+")

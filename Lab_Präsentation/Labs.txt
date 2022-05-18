@@ -1,0 +1,15 @@
+
+Lab01;06;10;11;12 = MiniProject
+
+Lab02;03 = Connect4
+
+Lab04 = React Native MiniProject
+
+Lab05 = Weatherapp
+
+Lab07 = installation Xcode
+
+Lab08 = Game of life swift
+
+Lab09 = Calculator
+

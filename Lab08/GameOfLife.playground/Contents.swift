@@ -6,7 +6,7 @@ var oldBoard = Array(repeating: Array(repeating: 0, count: boardSize), count: bo
 
 //fill old board
 for (index, rows) in oldBoard.enumerated() {
-    for (i, cols) in rows.enumerated() {
+    for (i, _) in rows.enumerated() {
         oldBoard[index][i] = Int(arc4random() % 2)
     }
 }
@@ -31,8 +31,8 @@ func countLiveNeighbors(y: Int, x: Int) -> Int{
 
 //calculate new board
 for (index, rows) in oldBoard.enumerated() {
-    for (i, cols) in rows.enumerated() {
-        var liveNeighbors = countLiveNeighbors(y: index, x: i)
+    for (i, _) in rows.enumerated() {
+        let liveNeighbors = countLiveNeighbors(y: index, x: i)
         if (oldBoard[index][i] != 0) { //alive
             if liveNeighbors < 2 { //underpopulation
                 newBoard[index][i] = 0;
@@ -52,11 +52,11 @@ for (index, rows) in oldBoard.enumerated() {
 }
 
 print("---- 0 ----")
-for (index, rows) in oldBoard.enumerated() {
+for (_, rows) in oldBoard.enumerated() {
     print(rows)
 }
 print("---- 1 ----")
-for (index, rows) in newBoard.enumerated() {
+for (_, rows) in newBoard.enumerated() {
     print(rows)
 }
 
